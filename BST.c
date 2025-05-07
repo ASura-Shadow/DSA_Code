@@ -8,6 +8,7 @@ typedef struct BST
 	int info;
 	struct BST *right;
 }bst;
+
 //All Function declaration
 void insert(bst **,int);
 void display(bst *);
@@ -27,6 +28,8 @@ void leastValue(bst *);
 int heightOfTree(bst *);
 int depthOfTree(bst *);
 void findParent(bst * ,int);
+void count_NodeWithExcatlyOneChild(bst *, int *);
+void count_NodesWithCommonParent(bst *, int *);
 
 int main()
 {
@@ -36,7 +39,7 @@ int main()
 	{
 		system("cls");
 		printf("\n\t Binary Search Tree  Operation:\n");
-		printf("\n\t\t1.Insert in Binary Search Tree. \n\t\t2.Display Traversals. \n\t\t3.Count Total Node. \n\t\t4.Count Total Leaf Node. \n\t\t5.Count Node With Left Child. \n\t\t6.Count Node With Right Child. \n\t\t7.Count Node With Parent. \n\t\t8.Count Node With Both Child. \n\t\t9.Highest Value In BST. \n\t\t10.Least Value In BST. \n\t\t11.Count Node On Left Side Of BST. \n\t\t12.Count Node On Right Side of BST. \n\t\t13.Height of BST. \n\t\t14.Depth of BST. \n\t\t15.Find Parent of a Node. \n\t\t16.exit");
+		printf("\n\t\t1.Insert in Binary Search Tree. \n\t\t2.Display Traversals. \n\t\t3.Count Total Node. \n\t\t4.Count Total Leaf Node. \n\t\t5.Count Node With Left Child. \n\t\t6.Count Node With Right Child. \n\t\t7.Count Node With Parent. \n\t\t8.Count Node With Both Child. \n\t\t9.Highest Value In BST. \n\t\t10.Least Value In BST. \n\t\t11.Count Node On Left Side Of BST. \n\t\t12.Count Node On Right Side of BST. \n\t\t13.Height of BST. \n\t\t14.Depth of BST. \n\t\t15.Find Parent of a Node. \n\t16.Count of nodes having only one child \n\t17.Count of Nodes Having Common Parents Or Count of Sibilings \n\t18.exit ");
 		printf("\n\tPlease enter your choice: ");
 		scanf("%d",&ch);
 		
@@ -122,8 +125,25 @@ int main()
     			findParent(root, num);
     			system("Pause");
     			break;
-			case 16:
+			
+            case 16:
+                count=0;
+                count_NodeWithExcatlyOneChild(root,&count);
+                printf("Number of nodes having only 1 child are = %d",count);
+                system("Pause");
+                break;
+			
+			case 17:
+				//This function for common parent or sibiling = count*2
+				count=0;
+				count_NodesWithCommonParent(root,&count);
+				printf("Number of Nodes Having Common Parent OR Count of Nodes that are Sibilings are = &d",(count*2));
+				system("Pause");
+				break;
+
+			case 18:
 				exit(0); //for exit for program
+            
 			default:
 				printf("\nInvaliad choice! Please try again.");
 				getch();
@@ -139,7 +159,7 @@ void insert(bst **rt,int x)
 {
 	if((*rt) == NULL)
 	{
-		bst *p = (bst*)malloc(sizeof(bst));
+		bst p = (bst)malloc(sizeof(bst));
 		if(p != NULL)
 		{
 			p->info=x;
@@ -160,7 +180,7 @@ void insert(bst **rt,int x)
 	}
 	else
 	{
-		printf("\n\t\tDuplicate data is not allow!");
+		printf("\n\t\tDuplicate data is not allowed!");
 	}
 }
 
@@ -305,7 +325,6 @@ void countNodeWithParent(bst *rt , int*count)
 }
 
 //Definition of countNodeWithBothChild function
-//This function also for common parent or sibiling
 void countNodeWithBothChildren(bst *rt,int *count)
 {
 	if(rt != NULL)
@@ -433,4 +452,32 @@ void findParent(bst *rt,int x)
 		}
 	}
 	printf("Node %d not found in the tree.\n",x);
+}
+
+//Definition of count_NodesWithExactlyOneChild function
+void count_NodeWithExcatlyOneChild(bst *rt, int *count)
+{
+    if(rt!=NULL)
+    {
+        if(((rt->left!=NULL) && (rt->right==NULL)) || ((rt->left==NULL) && (rt->right!=NULL))) 
+        {
+            (*count)++;
+        }
+        count_NodeWithExcatlyOneChild(rt->left,count);
+        count_NodeWithExcatlyOneChild(rt->right,count);
+    }
+}
+
+//Definition of count_NodesWithCommonParent function
+void count_NodesWithCommonParent(bst *rt, int *count)
+{
+	if(rt!=NULL)
+	{
+		if((rt->left!=NULL) && (rt->right!=NULL))
+		{
+			(*count)++;
+		}
+		count_NodesWithCommonParent(rt->left,count);
+		count_NodesWithCommonParent(rt->right,count);
+	}
 }
